@@ -3,7 +3,7 @@ import "./App.css";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import PokemonColection from "./components/PokemonColection";
-import { Pokemon } from "./inteface";
+import { Detail, Pokemon } from "./inteface";
 
 interface Pokemons {
   name: string;
@@ -14,6 +14,11 @@ const App: React.FC = () => {
   const [pokemons, setPokemons] = useState<Pokemon[]>([]);
   const [nextUrl, setNextUrl] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
+  const [viewDetail, setDetail] = useState<Detail>({
+    id: 0,
+    isOpened: false,
+  });
+
   useEffect(() => {
     const getPokemon = async () => {
       const res = await axios.get(
@@ -25,7 +30,7 @@ const App: React.FC = () => {
           `https://pokeapi.co/api/v2/pokemon/${pokemon.name}`
         );
         setPokemons((p) => [...p, poke.data]);
-        console.log(poke.data)
+        console.log(poke.data);
         setLoading(false);
       });
     };
@@ -50,9 +55,15 @@ const App: React.FC = () => {
     <div className="App">
       <div className="container">
         <header className="pokemon-header">Pokemon</header>
-        <PokemonColection pokemons={pokemons} />
+        <PokemonColection
+          pokemons={pokemons}
+          viewDetail={viewDetail}
+          setDetail={setDetail}
+        />
         <div className="btn">
-          <button onClick={nextPage}>{loading ? "loading..." : "Load more" }</button>
+          <button onClick={nextPage}>
+            {loading ? "loading..." : "Load more"}
+          </button>
         </div>
       </div>
     </div>
